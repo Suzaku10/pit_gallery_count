@@ -13,6 +13,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int _galleryCount = 0;
+  List<dynamic> res;
 
   @override
   void initState() {
@@ -23,7 +24,10 @@ class _MyAppState extends State<MyApp> {
   Future<void> getTotalImage() async {
     int galleryCount;
     try {
+      List<ImageData> params = [ImageData.imageName, ImageData.dateTaken, ImageData.imageSize];
       galleryCount = await PitGalleryCount.getGalleryCount();
+      res = await PitGalleryCount.getImageList(imageData: params);
+      print("${res.runtimeType} ${res}");
     } on PlatformException {
       galleryCount = -1;
     }
@@ -39,13 +43,10 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Center(
-          child: Text('Total Image on your device: $_galleryCount\n'),
-        ),
-      ),
+          appBar: AppBar(
+            title: const Text('Plugin example app'),
+          ),
+          body: Text("Total Image on device :${_galleryCount}")),
     );
   }
 }
