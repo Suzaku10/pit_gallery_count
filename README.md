@@ -9,7 +9,7 @@ Use this Plugin for count a image in gallery
 First, add `pit_gallery_count` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
 
 ```
-pit_gallery_count: ^0.0.1
+pit_gallery_count: ^0.1.0
 ```
 
 ## Important
