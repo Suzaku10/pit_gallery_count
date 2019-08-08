@@ -25,7 +25,10 @@ class _MyAppState extends State<MyApp> {
   Future<void> getTotalImage() async {
     int galleryCount;
     try {
+     List<ImageData> params = [ImageData.imageName, ImageData.dateTaken, ImageData.imageSize];
       galleryCount = await PitGalleryCount.getGalleryCount();
+      List<dynamic> res = await PitGalleryCount.getImageList(imageData: params);
+      print(res);
     } on PlatformException {
       galleryCount = -1;
     }

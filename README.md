@@ -34,3 +34,9 @@ And you must add this on info.plist for IOS
 ```
      int galleryCount = await PitGalleryCount.getGalleryCount();
 ```
+
+## Example for Get Image List
+```
+   List<ImageData> params = [ImageData.imageName, ImageData.dateTaken, ImageData.imageSize];
+   List<dynamic> res = await PitGalleryCount.getImageList(imageData: params);
+```
