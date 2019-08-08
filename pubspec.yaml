@@ -1,5 +1,5 @@
 name: pit_gallery_count
-description: Plugin for count image in gallery, this plugin depends on other plugins, you must have a permission to use this plugin, you can use `pit_permission` plugin or other plugin.
+description: Plugin for count image in gallery, this plugin depends on other plugins, you must have a permission to use this plugin, you can use `pit_permission` plugin
 version: 0.0.1
 author: Yudistira Yoga <yudhistiray198@gmail.com>
 homepage: https://github.com/Suzaku10/pit_gallery_count
