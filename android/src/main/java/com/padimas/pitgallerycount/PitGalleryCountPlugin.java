@@ -109,7 +109,7 @@ public class PitGalleryCountPlugin implements MethodCallHandler {
         String mediaStoreData = "";
 
         switch (imageData) {
-            case "imageRaw":
+            case "imagePath":
                 mediaStoreData = MediaStore.Images.Media.DATA;
                 break;
 

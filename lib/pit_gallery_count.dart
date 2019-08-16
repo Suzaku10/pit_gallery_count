@@ -24,7 +24,7 @@ class PitGalleryCount {
   }
 }
 
-enum ImageData { dateTaken, imageName, imageSize, imageLatitude, imageLongitude, imageRaw, imageId }
+enum ImageData { dateTaken, imageName, imageSize, imageLatitude, imageLongitude, imagePath, imageId }
 
 String getImageDataString(ImageData imageData) {
   String imageDataString;
@@ -49,8 +49,8 @@ String getImageDataString(ImageData imageData) {
       imageDataString = "imageLongitude";
       break;
 
-    case ImageData.imageRaw:
-      imageDataString = "imageRaw";
+    case ImageData.imagePath:
+      imageDataString = "imagePath";
       break;
 
     case ImageData.imageId:

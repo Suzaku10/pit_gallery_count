@@ -24,7 +24,7 @@ class _MyAppState extends State<MyApp> {
   Future<void> getTotalImage() async {
     int galleryCount;
     try {
-      List<ImageData> params = [ImageData.imageName, ImageData.dateTaken, ImageData.imageSize];
+      List<ImageData> params = [ImageData.imageName, ImageData.imagePath, ImageData.dateTaken, ImageData.imageSize];
       galleryCount = await PitGalleryCount.getGalleryCount();
       res = await PitGalleryCount.getImageList(imageData: params);
       print("${res.runtimeType} ${res}");
@@ -46,7 +46,7 @@ class _MyAppState extends State<MyApp> {
           appBar: AppBar(
             title: const Text('Plugin example app'),
           ),
-          body: Text("Total Image on device :${_galleryCount}")),
+          body: Text("Total Image on device :${_galleryCount}\n\n ${res}")),
     );
   }
 }
