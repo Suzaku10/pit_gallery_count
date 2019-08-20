@@ -10,18 +10,7 @@ public class SwiftPitGalleryCountPlugin: NSObject, FlutterPlugin {
     }
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if call.method.elementsEqual("getGalleryCount"){
-            let count = getGalleryCount()
-            result(count)
-        } else if(call.method.elementsEqual("getImageList")){
-            let param = call.arguments as! Dictionary<String, Any>
-            var imageDataList = [String] ()
-            var imageData = param["imageData"] as! [String]
-            for index in 0..<imageData.count {
-                imageDataList.append(imageData[index])
-            }
-            let res = getImageList(param: imageDataList, fllutterResult: result)
-        }
+        result(FlutterMethodNotImplemented)
     }
     
     public func getGalleryCount() -> Int {

@@ -1,10 +1,15 @@
 package com.padimas.pitgallerycount;
 
+import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,10 +26,10 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
  */
 public class PitGalleryCountPlugin implements MethodCallHandler {
     public PitGalleryCountPlugin(Registrar registrar) {
-        this.registrar = registrar;
+        this.context = registrar.context();
     }
 
-    Registrar registrar;
+    Context context;
 
     /**
      * Plugin registration.
@@ -40,22 +45,27 @@ public class PitGalleryCountPlugin implements MethodCallHandler {
             int count = getGalleryCount();
             result.success(count);
         } else if (call.method.equals("getImageList")) {
-            List<String> imageData = call.argument("imageData");
-            Integer size = call.argument("size");
+            Integer size = call.argument("countImage");
             String sortBy = call.argument("sortBy");
-            List<Map<String, Object>> res = getImageList(imageData, size == null ? 0 : size, sortBy);
-            result.success(res);
+            String sortType = call.argument("sortType");
+            try {
+                List<Map<String, Object>> res = getImageList(size == null ? 0 : size, sortBy, sortType);
+                result.success(res);
+            } catch (Exception e) {
+                e.printStackTrace();
+                result.error("error", e.getLocalizedMessage(), e );
+            }
         } else {
             result.notImplemented();
         }
     }
 
-    public int getGalleryCount() {
+    private int getGalleryCount() {
         int count = 0;
         try {
             final String[] columns = {MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID};
             final String orderBy = MediaStore.Images.Media._ID;
-            Cursor cursor = registrar.context().getContentResolver().query(
+            Cursor cursor = context.getContentResolver().query(
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null,
                     null, orderBy);
             if (cursor != null) {
@@ -63,62 +73,51 @@ public class PitGalleryCountPlugin implements MethodCallHandler {
                 cursor.close();
             }
         } catch (Exception e) {
-            Log.d("Error", "getGalleryCount:" + e.getLocalizedMessage());
             count = -1;
         }
         return count;
     }
 
-    public List<Map<String, Object>> getImageList(List<String> imageDataList, int size, String sortBy) {
+    private List<Map<String, Object>> getImageList(int size, String sortBy, String sortType) throws Exception{
         List<Map<String, Object>> list = new ArrayList<>();
-        String[] columns = new String[imageDataList.size()];
-
-        for (int i = 0; i < imageDataList.size(); i++) {
-            columns[i] = getImageDataString(imageDataList.get(i));
-        }
-
-        String[] defaultColumns = {MediaStore.Images.Media._ID, MediaStore.Images.Media.DATA, MediaStore.Images.Media.DISPLAY_NAME, MediaStore.Images.Media.SIZE, MediaStore.Images.Media.DATE_TAKEN, MediaStore.Images.Media.LATITUDE, MediaStore.Images.Media.LONGITUDE};
-        String[] projections = columns.length != 0 ? columns : defaultColumns;
-
-        try {
-            final String orderBy = sortBy == null ? projections[0] : projections.equals(getImageDataString(sortBy)) ? getImageDataString(sortBy) : projections[0];
-            Cursor cursor = registrar.context().getContentResolver().query(
+        String[] projections = {MediaStore.Images.Media.DATA, MediaStore.Images.Media.DISPLAY_NAME, MediaStore.Images.Media.SIZE, MediaStore.Images.Media.DATE_TAKEN, MediaStore.Images.Media.LATITUDE, MediaStore.Images.Media.LONGITUDE, MediaStore.Images.Media.DATE_MODIFIED, MediaStore.Images.Media.DATE_ADDED};
+            final String orderBy = sortBy == null ? null : getSortingColumnString(sortBy) + " " + (sortType == null ? "ASC" : sortType);
+            Cursor cursor = context.getContentResolver().query(
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projections, null,
                     null, orderBy);
+
+            if (size != 0) size = size > cursor.getCount() ? cursor.getCount() : size;
             if (cursor != null) {
                 for (cursor.moveToFirst(); size == 0 ? !cursor.isAfterLast() : cursor.getPosition() < size; cursor.moveToNext()) {
                     Map<String, Object> result = new HashMap<>();
-                    for (int i = 0; i < imageDataList.size(); i++) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            result.putIfAbsent(imageDataList.get(i), cursor.getString(i));
-                        } else {
-                            result.put(imageDataList.get(i), cursor.getString(i));
-                        }
+                    for (int i = 0; i < projections.length; i++) {
+                        result.put(projections[i], cursor.getString(i));
                     }
                     list.add(result);
                 }
                 cursor.close();
             }
-        } catch (Exception e) {
-            Log.d("Error", "getGalleryCount:" + e.getLocalizedMessage());
-        }
         return list;
     }
 
-    private String getImageDataString(String imageData) {
+    private String getSortingColumnString(String sortBy) {
         String mediaStoreData = "";
 
-        switch (imageData) {
-            case "imagePath":
-                mediaStoreData = MediaStore.Images.Media.DATA;
+        switch (sortBy) {
+            case "imageDateTaken":
+                mediaStoreData = MediaStore.Images.Media.DATE_TAKEN;
                 break;
 
-            case "dateTaken":
-                mediaStoreData = MediaStore.Images.Media.DATE_TAKEN;
+            case "imageDateAdded":
+                mediaStoreData = MediaStore.Images.Media.DATE_ADDED;
                 break;
 
             case "imageSize":
                 mediaStoreData = MediaStore.Images.Media.SIZE;
+                break;
+
+            case "imagePath":
+                mediaStoreData = MediaStore.Images.Media.DATA;
                 break;
 
             case "imageLatitude":
@@ -132,10 +131,10 @@ public class PitGalleryCountPlugin implements MethodCallHandler {
             case "imageName":
                 mediaStoreData = MediaStore.Images.Media.DISPLAY_NAME;
                 break;
-            case "imageId":
-                mediaStoreData = MediaStore.Images.Media._ID;
-                break;
 
+            case "imageDateModified":
+                mediaStoreData = MediaStore.Images.Media.DATE_MODIFIED;
+                break;
         }
         return mediaStoreData;
     }

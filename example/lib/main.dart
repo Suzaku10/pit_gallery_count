@@ -13,7 +13,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int _galleryCount = 0;
-  List<dynamic> res;
+  List<GalleryResultModel> res;
 
   @override
   void initState() {
@@ -24,12 +24,12 @@ class _MyAppState extends State<MyApp> {
   Future<void> getTotalImage() async {
     int galleryCount;
     try {
-      List<ImageData> params = [ImageData.imageName, ImageData.imagePath, ImageData.dateTaken, ImageData.imageSize];
       galleryCount = await PitGalleryCount.getGalleryCount();
-      res = await PitGalleryCount.getImageList(imageData: params);
+      res = await PitGalleryCount.getImageList(imageSortBy: SortColumn.imageName, sortTypeBy: SortType.asc);
       print("${res.runtimeType} ${res}");
     } on PlatformException {
       galleryCount = -1;
+      print("disni");
     }
 
     if (!mounted) return;
