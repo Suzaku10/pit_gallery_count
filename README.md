@@ -9,7 +9,7 @@ Use this Plugin for count a image in gallery
 First, add `pit_gallery_count` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
 
 ```
-pit_gallery_count: ^0.1.0+1
+pit_gallery_count: ^0.1.1
 ```
 
 ## Important
@@ -21,6 +21,7 @@ You must add this permission in AndroidManifest.xml for Android
 ```
 for read Storage = <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 ```
+*Note*: version 0.1.1 doesn't support for IOS
 
 And you must add this on info.plist for IOS
 

@@ -1,3 +1,6 @@
+## 0.1.1
+* ios result not implement, return model on android
+
 ## 0.1.0+1
 * Get a method to get Image List in ios
 

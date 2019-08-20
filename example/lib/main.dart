@@ -29,7 +29,6 @@ class _MyAppState extends State<MyApp> {
       print("${res.runtimeType} ${res}");
     } on PlatformException {
       galleryCount = -1;
-      print("disni");
     }
 
     if (!mounted) return;
