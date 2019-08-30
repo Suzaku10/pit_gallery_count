@@ -5,6 +5,7 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:pit_gallery_count/pit_gallery_count.dart';
+import 'dart:io';
 
 void main() => runApp(MyApp());
 
@@ -15,7 +16,9 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int _galleryCount = 0;
-  List<GalleryResultModel> res;
+
+  List<GalleryWithUint8List> imageList;
+  List<File> result;
 
   @override
   void initState() {
@@ -25,10 +28,17 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> getTotalImage() async {
     int galleryCount;
+    List<GalleryWithUint8List> res;
+    List<File> fileList = [];
+
     try {
       galleryCount = await PitGalleryCount.getGalleryCount();
-      res = await PitGalleryCount.getImageList(imageSortBy: SortColumn.imageName, sortTypeBy: SortType.asc);
-      print("${res.runtimeType} ${res}");
+      res = await PitGalleryCount.getImageListWithByteData(
+          countImage: 2, imageSortBy: SortColumn.dateTaken, maxSize: 200);
+
+      for (var item in res) {
+        fileList.add(await PitGalleryCount.convertByteDataToFile(item.dataByteImage));
+      }
     } on PlatformException {
       galleryCount = -1;
     }
@@ -37,6 +47,8 @@ class _MyAppState extends State<MyApp> {
 
     setState(() {
       _galleryCount = galleryCount;
+      imageList = res;
+      result = fileList;
     });
   }
 
@@ -47,7 +59,25 @@ class _MyAppState extends State<MyApp> {
           appBar: AppBar(
             title: const Text('Plugin example app'),
           ),
-          body: Text("Total Image on device :${_galleryCount}\n\n ${res}")),
+          body: Column(
+            children: <Widget>[
+              Text("Total Image on device :${_galleryCount}\n\n"),
+              FlatButton(
+                  onPressed: () async {
+                    await PitGalleryCount.clearTempFile();
+                  },
+                  child: Text("text")),
+              Expanded(
+                  child: result == null
+                      ? Container(color: Colors.black)
+                      : SingleChildScrollView(
+                          child: Column(
+                          children: List.generate(result.length, (index) {
+                            return Image.file(result[index]);
+                          }),
+                        )))
+            ],
+          )),
     );
   }
 }

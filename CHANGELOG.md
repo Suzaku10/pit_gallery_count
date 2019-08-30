@@ -1,3 +1,6 @@
+## 0.1.2
+* added byteData on model and can be convert to file
+
 ## 0.1.1
 * ios result not implement, return model on android
 
