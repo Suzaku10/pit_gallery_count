@@ -32,16 +32,9 @@ class PitGalleryCount {
       getAlbumOriginal(item.imagePath, (assetId, message) {
         item.dataByteImage = message.buffer.asUint8List(message.offsetInBytes, message.lengthInBytes);
 
-        var allDataFill;
-        finalResult.forEach((item) {
-          if (item.dataByteImage == null) {
-            allDataFill = false;
-          } else {
-            allDataFill = true;
-          }
-        });
+        var itemContainsNull = finalResult.firstWhere((item) => item.dataByteImage == null, orElse: ()=> null);
+        if(itemContainsNull == null) completer.complete(finalResult);
 
-        if (allDataFill) completer.complete(finalResult);
       }, maxSize: maxSize);
     });
 

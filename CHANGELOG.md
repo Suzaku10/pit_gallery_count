@@ -1,3 +1,6 @@
+## 0.1.2+1
+*  fix on logic to completed
+
 ## 0.1.2
 * added byteData on model and can be convert to file
 
