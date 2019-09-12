@@ -1,6 +1,6 @@
 name: pit_gallery_count
 description: Plugin for count image in gallery, this plugin depends on other plugins, you must have a permission to use this plugin, you can use `pit_permission` plugin
-version: 0.1.2+1
+version: 0.1.2+2
 author: Yudistira Yoga <yudhistiray198@gmail.com>
 homepage: https://github.com/Suzaku10/pit_gallery_count
 
@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  path_provider: ^1.2.0
+  path_provider: ^0.5.0+1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec

@@ -1,3 +1,6 @@
+## 0.1.2+2
+* downgrade pathprovider to 0.5.0+1
+
 ## 0.1.2+1
 *  fix on logic to completed
 
