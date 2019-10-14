@@ -1,3 +1,6 @@
+## 0.1.2+3
+* upgrade pathprovider to 1.3.0
+
 ## 0.1.2+2
 * downgrade pathprovider to 0.5.0+1
 
