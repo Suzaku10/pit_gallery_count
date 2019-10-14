@@ -1,5 +1,5 @@
 ## 0.1.2+3
-* upgrade pathprovider to 1.3.0
+* fix bug if images not available
 
 ## 0.1.2+2
 * downgrade pathprovider to 0.5.0+1

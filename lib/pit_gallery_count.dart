@@ -28,6 +28,8 @@ class PitGalleryCount {
       finalResult.add(GalleryWithUint8List.fromJson(Map<String, dynamic>.from(result[i])));
     }
 
+    if(finalResult.isEmpty) return finalResult;
+
     finalResult.forEach((item) {
       getAlbumOriginal(item.imagePath, (assetId, message) {
         item.dataByteImage = message.buffer.asUint8List(message.offsetInBytes, message.lengthInBytes);
