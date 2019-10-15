@@ -4,17 +4,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.provider.MediaStore;
-import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -178,6 +172,7 @@ public class PitGalleryCountPlugin implements MethodCallHandler {
         BinaryMessenger messenger;
         String assetId;
         int maxSize;
+        ByteBuffer buffer;
 
         GetImageTask(BinaryMessenger messenger, String assetId, int maxSize) {
             super();
@@ -188,6 +183,7 @@ public class PitGalleryCountPlugin implements MethodCallHandler {
 
         @Override
         protected Void doInBackground(String... strings) {
+
             File file = new File(this.assetId);
 
             byte[] bytesArray = null;
@@ -209,10 +205,15 @@ public class PitGalleryCountPlugin implements MethodCallHandler {
             bitmap.recycle();
 
             assert bytesArray != null;
-            final ByteBuffer buffer = ByteBuffer.allocateDirect(bytesArray.length);
+            buffer = ByteBuffer.allocateDirect(bytesArray.length);
             buffer.put(bytesArray);
-            this.messenger.send("pit_gallery_count/" + assetId, buffer);
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            this.messenger.send("pit_gallery_count/" + assetId, buffer);
+            super.onPostExecute(aVoid);
         }
     }
 }

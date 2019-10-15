@@ -28,15 +28,14 @@ class PitGalleryCount {
       finalResult.add(GalleryWithUint8List.fromJson(Map<String, dynamic>.from(result[i])));
     }
 
-    if(finalResult.isEmpty) return finalResult;
+    if (finalResult.isEmpty) return finalResult;
 
     finalResult.forEach((item) {
       getAlbumOriginal(item.imagePath, (assetId, message) {
         item.dataByteImage = message.buffer.asUint8List(message.offsetInBytes, message.lengthInBytes);
 
-        var itemContainsNull = finalResult.firstWhere((item) => item.dataByteImage == null, orElse: ()=> null);
-        if(itemContainsNull == null) completer.complete(finalResult);
-
+        var itemContainsNull = finalResult.firstWhere((item) => item.dataByteImage == null, orElse: () => null);
+        if (itemContainsNull == null) completer.complete(finalResult);
       }, maxSize: maxSize);
     });
 
@@ -46,9 +45,9 @@ class PitGalleryCount {
   static Future<dynamic> getAlbumOriginal(String assetId, Function callback, {int maxSize}) async {
     assert(assetId != null);
 
-    BinaryMessages.setMessageHandler('pit_gallery_count/$assetId', (ByteData message) {
+    defaultBinaryMessenger.setMessageHandler('pit_gallery_count/$assetId', (ByteData message) {
       callback(assetId, message);
-      BinaryMessages.setMessageHandler('pit_gallery_count/$assetId', null);
+      defaultBinaryMessenger.setMessageHandler('pit_gallery_count/$assetId', null);
     });
 
     Map<String, dynamic> param = <String, dynamic>{"assetId": assetId};
@@ -65,9 +64,9 @@ class PitGalleryCount {
 
     bool exist = await Directory(dirPath).exists();
 
-    if(!exist) await Directory(dirPath).create(recursive: true);
+    if (!exist) await Directory(dirPath).create(recursive: true);
 
-    final String filePath = '$dirPath/${_timestamp}.jpg';
+    final String filePath = '$dirPath/$_timestamp.jpg';
     File file = await File(filePath).writeAsBytes(byteData);
 
     return file;
@@ -76,11 +75,13 @@ class PitGalleryCount {
   static Future<bool> clearTempFile({String path = "image_count"}) async {
     final Directory extDir = await getTemporaryDirectory();
     final String dirPath = "${extDir.path}/$path";
-    final dir = Directory(dirPath);
-
-    dir.deleteSync(recursive: true);
-    bool exist = await Directory(dirPath).exists();
-
+    bool exist;
+    exist = await Directory(dirPath).exists();
+    if (exist) {
+      final dir = Directory(dirPath);
+      dir.deleteSync(recursive: true);
+    }
+    exist = await Directory(dirPath).exists();
     return !exist;
   }
 }
@@ -171,4 +172,3 @@ class GalleryWithUint8List {
         dataByteImage: null);
   }
 }
-
