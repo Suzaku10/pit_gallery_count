@@ -1,5 +1,8 @@
+## 0.1.2+5
+* update compileSdkVersion to 28
+
 ## 0.1.2+4
-upgrade pathprovider to 1.3.0 , and fix bugs
+* upgrade pathprovider to 1.3.0 , and fix bugs
 
 ## 0.1.2+3
 * fix bug if images not available
