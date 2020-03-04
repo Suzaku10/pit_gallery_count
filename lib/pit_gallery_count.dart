@@ -44,10 +44,9 @@ class PitGalleryCount {
 
   static Future<dynamic> getAlbumOriginal(String assetId, Function callback, {int maxSize}) async {
     assert(assetId != null);
-
-    defaultBinaryMessenger.setMessageHandler('pit_gallery_count/$assetId', (ByteData message) {
+    ServicesBinding.instance.defaultBinaryMessenger.setMessageHandler('pit_gallery_count/$assetId', (ByteData message) {
       callback(assetId, message);
-      defaultBinaryMessenger.setMessageHandler('pit_gallery_count/$assetId', null);
+      ServicesBinding.instance.defaultBinaryMessenger.setMessageHandler('pit_gallery_count/$assetId', null);
     });
 
     Map<String, dynamic> param = <String, dynamic>{"assetId": assetId};

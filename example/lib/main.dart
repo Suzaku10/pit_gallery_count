@@ -32,7 +32,7 @@ class _MyAppState extends State<MyApp> {
     try {
       galleryCount = await PitGalleryCount.getGalleryCount();
       res = await PitGalleryCount.getImageListWithByteData(
-          countImage: 2, imageSortBy: SortColumn.dateTaken, maxSize: 200);
+          countImage: 10, imageSortBy: SortColumn.dateTaken, maxSize: 200);
 
       for (var item in res) {
         fileList.add(await PitGalleryCount.convertByteDataToFile(item.dataByteImage));
